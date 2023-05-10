@@ -1,0 +1,13 @@
+version: '3'
+services:
+  redis:
+    image: 'bitnami/redis:6.2'
+    ports:
+      - '6379:6379'
+    environment:
+#      - REDIS_PASSWORD='9JzVqryg9t9QwCGfm'
+       - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - './../db/redis:/bitnami/redis/data'
+    expose:
+      - '6379'

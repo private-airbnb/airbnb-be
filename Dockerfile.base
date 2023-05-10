@@ -1,0 +1,12 @@
+# Building source code
+FROM node:14-alpine as builder
+
+MAINTAINER dinhnguyenkhanh210401@gmail.com
+
+WORKDIR /app
+
+COPY . /app
+
+RUN npm install
+
+CMD ["sh"]

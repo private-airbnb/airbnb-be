@@ -1,0 +1,54 @@
+version: '3'
+services:
+  db:
+    image: 'postgres:latest'
+    ports:
+      - '${DB_PORT}:5432'
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - './db/postgres:/var/lib/postgresql/data'
+    networks:
+      - rmis-network
+    expose:
+      - '${DB_PORT}'
+  redis:
+    image: 'bitnami/redis:6.2'
+    ports:
+      - '${DB_REDIS_PORT}:6379'
+    environment:
+      #- REDIS_PASSWORD=${DB_REDIS_PASSWORD}
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      - rmis-network
+    volumes:
+      - './db/redis:/bitnami/redis/data'
+    expose:
+      - '${DB_REDIS_PORT}'
+  elasticsearch:
+    container_name: es-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    environment:
+      - 'discovery.type=single-node'
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    networks:
+      - rmis-network
+    ports:
+      - 9200:9200
+      - 9300:9300
+  kibana:
+    container_name: kb-container
+    image: docker.elastic.co/kibana/kibana:7.14.0
+    environment:
+      - ELASTICSEARCH_HOSTS='${ELASTICSEARCH_NODE}'
+    networks:
+      - rmis-network
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+
+networks:
+  rmis-network:

@@ -1,0 +1,20 @@
+{
+    "host": "Your host",
+    "type": "postgres",
+    "port": 5432,
+    "username": "DB username",
+    "password": "DB password",
+    "database": "DB name",
+    "schema": "Schema name",
+    "entities": [
+      "src/entities/**/*.ts"
+    ],
+    "migrations": [
+      "src/migration/*.ts"
+    ],
+    "cli": {
+      "migrationsDir": "src/migration"
+    },
+    "synchronize": true,
+    "logging": false
+}

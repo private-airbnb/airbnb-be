@@ -16,18 +16,18 @@ import { generateUUIDv4 } from '../common/utils/mail.utils';
 import { SignInUserDTO } from './dto/sign-in-user.dto';
 import { AuthService } from '../auth/auth.service';
 import { ParallelAsync } from '../common/utils/async.utils';
+import UserRepository from './user.repository';
+import RoleRepository from './role.repository';
+import VerificationRepository from './verification.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly mailService: MailService,
     private readonly authService: AuthService,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    @InjectRepository(Role)
-    private readonly roleRepository: Repository<Role>,
-    @InjectRepository(Verification)
-    private readonly verificationRepository: Repository<Verification>,
+    private readonly userRepository: UserRepository,
+    private readonly roleRepository: RoleRepository,
+    private readonly verificationRepository: VerificationRepository,
   ) {}
 
   async signUp({
