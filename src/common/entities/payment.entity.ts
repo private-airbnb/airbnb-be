@@ -4,9 +4,6 @@ import { Entity, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Payment extends CoreEntity {
-  @ManyToOne(
-    type => User,
-    user => user.payments,
-  )
+  @ManyToOne((_type) => User, (user) => user.payments)
   user: User;
 }

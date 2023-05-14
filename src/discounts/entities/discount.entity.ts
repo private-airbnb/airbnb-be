@@ -16,17 +16,14 @@ export class Discount extends CoreEntity {
   @IsEnum(DiscountType)
   type: DiscountType;
 
-  @ManyToOne(
-    type => Room,
-    room => room.discounts,
-  )
+  @ManyToOne((type) => Room, (room) => room.discounts)
   room: Room;
 
   @Column({ type: 'int', nullable: true })
   @IsInt()
   percent: number;
 
-  @Column({ type: 'datetime', nullable: true })
+  @Column({ nullable: true })
   @IsDate()
   endDate: Date;
 

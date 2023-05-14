@@ -17,10 +17,7 @@ export enum RatingCategory {
 @Entity()
 @Check(`star BETWEEN 0 AND 5`)
 export class Rating extends CoreEntity {
-  @ManyToOne(
-    type => Review,
-    review => review.ratings,
-  )
+  @ManyToOne((type) => Review, (review) => review.ratings)
   review: Review;
 
   @Column({ type: 'enum', enum: RatingCategory })

@@ -84,7 +84,7 @@ export class UsersService {
   async signIn({ email, password }: SignInUserDTO): Promise<string> {
     const user = await this.userRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'password']
+      select: ['id', 'email', 'password'],
     });
 
     if (user && (await user.checkPassword(password))) {

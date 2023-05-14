@@ -1,7 +1,7 @@
 export const shouldHaveProperties = (object, properties: string[]) =>
-  properties.forEach(property => expect(object).toHaveProperty(property));
+  properties.forEach((property) => expect(object).toHaveProperty(property));
 
-export const isUser = data => {
+export const isUser = (data) => {
   shouldHaveProperties(data, [
     'id',
     'firstName',
@@ -12,7 +12,7 @@ export const isUser = data => {
   ]);
 };
 
-export const isJWT = data => {
+export const isJWT = (data) => {
   const JWTRegex = /^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$/;
   expect(data).toHaveProperty('accessToken');
   expect(data.accessToken).toMatch(JWTRegex); // JWT regex

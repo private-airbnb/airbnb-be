@@ -29,10 +29,7 @@ export class Country extends CoreEntity {
   @IsEnum(CountryName)
   name: CountryName;
 
-  @OneToMany(
-    type => Room,
-    room => room.country,
-  )
+  @OneToMany((_type) => Room, (room) => room.country)
   rooms: Room[];
 
   calculateTax(room: Room, price: number, stayDays: number, guestCnt: number) {

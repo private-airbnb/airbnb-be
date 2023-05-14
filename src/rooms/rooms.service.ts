@@ -52,7 +52,7 @@ export class RoomsService {
       await this.roomRepository.insert({
         host,
         country: { id: countryId },
-        amenities: amenityItemIds.map(id => ({ id })),
+        amenities: amenityItemIds.map((id) => ({ id })),
         ...rest,
       })
     ).generatedMaps[0] as { id: number };
@@ -61,7 +61,7 @@ export class RoomsService {
 
     const parallelAsync = new ParallelAsync([
       this.photosService.insertPhotos(
-        photos.map(photo => ({ ...photo, room: { id: room.id } })),
+        photos.map((photo) => ({ ...photo, room: { id: room.id } })),
       ),
       this.discountsService.insertDiscounts([
         {
@@ -83,7 +83,7 @@ export class RoomsService {
         })),
       ),
       this.customRuleRepository.insert(
-        customRules.map(title => ({ room: { id: room.id }, title })),
+        customRules.map((title) => ({ room: { id: room.id }, title })),
       ),
       this.detailChoiceRepository.insert(
         detailChoices.map(({ detailId, ...rest }) => ({
@@ -103,8 +103,8 @@ export class RoomsService {
 
   async findOne(id: number): Promise<Room> {
     const room = await this.roomRepository.findOneOrFail({
-      where: {id: id},
-      relations: ['reservations', 'discounts', 'country', 'photos']
+      where: { id: id },
+      relations: ['reservations', 'discounts', 'country', 'photos'],
     });
     return room;
   }

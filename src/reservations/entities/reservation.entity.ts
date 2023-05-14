@@ -18,16 +18,10 @@ export enum ReservationStatus {
 
 @Entity()
 export class Reservation extends CoreEntity {
-  @ManyToOne(
-    type => Room,
-    room => room.reservations,
-  )
+  @ManyToOne((type) => Room, (room) => room.reservations)
   room: Room;
 
-  @ManyToMany(
-    type => User,
-    user => user.reservations,
-  )
+  @ManyToMany((type) => User, (user) => user.reservations)
   @JoinTable()
   guests: User[];
 

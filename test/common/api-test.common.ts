@@ -76,7 +76,7 @@ export class GraphQLApiTest extends ApiTest {
     if (authToken) base = this.setAuthToken(base, authToken);
     return base
       .send({ query })
-      .expect(res => expect(res.body.errors).toBeUndefined());
+      .expect((res) => expect(res.body.errors).toBeUndefined());
   }
 }
 

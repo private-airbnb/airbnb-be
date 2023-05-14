@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
 import { Public } from '../common/decorators/public.decorator';
 import { CountriesService } from './countries.service';
 import { CreateCountryDto } from './dto/create-country.dto';
-import { Country } from './entities/country.entity';
 
 @Controller('countries')
 export class CountriesController {

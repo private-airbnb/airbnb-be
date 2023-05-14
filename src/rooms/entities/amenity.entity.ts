@@ -9,10 +9,7 @@ export class AmenityGroup extends CoreEntity {
   @IsString()
   name: string;
 
-  @OneToMany(
-    type => AmenityItem,
-    amentity => amentity.group,
-  )
+  @OneToMany((type) => AmenityItem, (amentity) => amentity.group)
   amennities: AmenityItem[];
 }
 /*
@@ -33,8 +30,8 @@ VALUES
 @Entity()
 export class AmenityItem extends CoreEntity {
   @ManyToOne(
-    type => AmenityGroup,
-    amenitiesGroup => amenitiesGroup.amennities,
+    (type) => AmenityGroup,
+    (amenitiesGroup) => amenitiesGroup.amennities,
   )
   group: AmenityGroup;
 
@@ -46,10 +43,7 @@ export class AmenityItem extends CoreEntity {
   @IsString()
   description: string;
 
-  @ManyToMany(
-    type => Room,
-    room => room.amenities,
-  )
+  @ManyToMany((type) => Room, (room) => room.amenities)
   rooms: Room[];
 }
 

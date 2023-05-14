@@ -66,7 +66,7 @@ describe('CountriesService', () => {
       name: CountryName.SouthKorea,
     };
     it('should remove the country', async () => {
-      const id = 1;
+      // const id = 1;
       countryRepository.findOneOrFail.mockResolvedValue(null);
       countryRepository.delete.mockResolvedValue(null);
 

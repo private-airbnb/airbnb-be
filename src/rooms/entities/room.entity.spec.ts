@@ -1,7 +1,7 @@
 import { Room } from './room.entity';
 
 describe('RoomEntity', () => {
-  let room: Room = {
+  const room: Room = {
     id: 1,
     createdAt: '2021-01-22T11:53:57.736Z',
     updatedAt: '2021-01-22T11:53:57.736Z',
