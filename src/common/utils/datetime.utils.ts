@@ -1,19 +1,19 @@
 export const DateDiff = {
-  inDays: function(d1: Date, d2: Date) {
+  inDays: function (d1: Date, d2: Date) {
     const t2 = d2.getTime();
     const t1 = d1.getTime();
 
     return Math.trunc((t2 - t1) / (24 * 3600 * 1000));
   },
 
-  inWeeks: function(d1: Date, d2: Date) {
+  inWeeks: function (d1: Date, d2: Date) {
     const t2 = d2.getTime();
     const t1 = d1.getTime();
 
     return Math.trunc((t2 - t1) / (24 * 3600 * 1000 * 7));
   },
 
-  inMonths: function(d1: Date, d2: Date) {
+  inMonths: function (d1: Date, d2: Date) {
     const d1Y = d1.getFullYear();
     const d2Y = d2.getFullYear();
     const d1M = d1.getMonth();
@@ -22,7 +22,7 @@ export const DateDiff = {
     return d2M + 12 * d2Y - (d1M + 12 * d1Y);
   },
 
-  inYears: function(d1: Date, d2: Date) {
+  inYears: function (d1: Date, d2: Date) {
     return d2.getFullYear() - d1.getFullYear();
   },
 };

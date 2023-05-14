@@ -43,10 +43,10 @@ export class RuleChoice {
   @IsString()
   description: string;
 
-  @ManyToOne(type => Rule)
+  @ManyToOne((type) => Rule)
   rule: Rule;
 
-  @ManyToOne(type => Room)
+  @ManyToOne((type) => Room)
   room: Room;
 }
 
@@ -59,7 +59,7 @@ export class CustomRule {
   @IsString()
   title: string;
 
-  @ManyToOne(type => Room)
+  @ManyToOne((type) => Room)
   room: Room;
 }
 
@@ -102,9 +102,9 @@ export class DetailChoice {
   @IsString()
   explain: string;
 
-  @ManyToOne(type => Detail)
+  @ManyToOne((type) => Detail)
   detail: Detail;
 
-  @ManyToOne(type => Room)
+  @ManyToOne((type) => Room)
   room: Room;
 }

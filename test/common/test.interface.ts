@@ -3,7 +3,7 @@ export type RequestType = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 export interface IRestRequest {
   method: RequestType;
   url: string;
-  body?: Object;
+  body?: any;
   authToken?: string;
 }
 

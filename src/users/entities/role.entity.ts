@@ -11,10 +11,7 @@ export enum UserRole {
 
 @Entity()
 export class Role extends CoreEntity {
-  @ManyToOne(
-    type => User,
-    user => user.roles,
-  )
+  @ManyToOne((type) => User, (user) => user.roles)
   user: User;
 
   @Column({ type: 'enum', enum: UserRole })

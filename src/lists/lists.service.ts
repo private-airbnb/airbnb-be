@@ -33,10 +33,12 @@ export class ListsService {
     userId: number,
     appendListItemDto: AppendListItemDto,
   ): Promise<List> {
-    const list = await this.listRepository.findOneByOrFail({ id: appendListItemDto.id });
-    const room = await this.roomRepository.findOneByOrFail(
-      {id: appendListItemDto.roomId},
-    );
+    const list = await this.listRepository.findOneByOrFail({
+      id: appendListItemDto.id,
+    });
+    const room = await this.roomRepository.findOneByOrFail({
+      id: appendListItemDto.roomId,
+    });
     if (list.owner.id != userId)
       throw new UnauthorizedException('접근할 수 없습니다.');
     list.rooms = [...list.rooms, room];
@@ -48,11 +50,11 @@ export class ListsService {
   }
 
   async findOne(id: number): Promise<List> {
-    return await this.listRepository.findOneByOrFail({id: id});
+    return await this.listRepository.findOneByOrFail({ id: id });
   }
 
   async delete(id: number) {
-    await this.listRepository.findOneByOrFail({id: id});
+    await this.listRepository.findOneByOrFail({ id: id });
     return await this.listRepository.delete(id);
   }
 }

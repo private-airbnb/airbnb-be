@@ -14,10 +14,6 @@ export class Photo extends CoreEntity {
   caption?: string;
 
   // Inver Side Relation
-  @ManyToOne(
-    type => Room,
-    room => room.photos,
-    { nullable: true },
-  )
+  @ManyToOne((type) => Room, (room) => room.photos, { nullable: true })
   room: Room;
 }

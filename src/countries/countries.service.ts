@@ -22,7 +22,7 @@ export class CountriesService {
   }
 
   async remove(id: number) {
-    await this.contryRepository.findOneByOrFail({id: id});
+    await this.contryRepository.findOneByOrFail({ id: id });
     return await this.contryRepository.delete(id);
   }
 }

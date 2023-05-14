@@ -27,11 +27,10 @@ export class ReservationsService {
       checkOut: new Date(reserveRoomDTO.checkOut),
     });
 
-    const room = await this.roomRepository.findOneOrFail(
-      { where: { id: reserveRoomDTO.roomId }, 
-        relations: ['reservations', 'discounts', 'country']
-      }
-    );
+    const room = await this.roomRepository.findOneOrFail({
+      where: { id: reserveRoomDTO.roomId },
+      relations: ['reservations', 'discounts', 'country'],
+    });
     await room.validateReservation(reservation);
 
     reservation.status = ReservationStatus.REQUESTED;
@@ -43,11 +42,13 @@ export class ReservationsService {
   }
 
   async findOne(id: number): Promise<Reservation> {
-    return await this.reservationRepository.findOneByOrFail({id : id});
+    return await this.reservationRepository.findOneByOrFail({ id: id });
   }
 
   async cancel(id: number) {
-    const reservation = await this.reservationRepository.findOneByOrFail({ id: id });
+    const reservation = await this.reservationRepository.findOneByOrFail({
+      id: id,
+    });
     reservation.status = ReservationStatus.CANCELED;
     await this.reservationRepository.save(reservation);
   }

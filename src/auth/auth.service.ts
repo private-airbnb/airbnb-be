@@ -22,13 +22,14 @@ export class AuthService {
   }
 
   async getUserByPayload(payload: IPayload): Promise<User> {
-    return await this.userRepository.findOneBy({id: payload.id});
+    return await this.userRepository.findOneBy({ id: payload.id });
   }
 
   async verifyEmail(code: string): Promise<boolean> {
-    const verification = await this.verificationRepository.findOne(
-      { where: { code: code}, relations: ['user'] },
-    );
+    const verification = await this.verificationRepository.findOne({
+      where: { code: code },
+      relations: ['user'],
+    });
     if (!verification)
       throw new BadRequestException('유효하지 않은 코드입니다.');
 

@@ -34,10 +34,7 @@ export enum RoomType {
 
 @Entity()
 export class Room extends CoreEntity {
-  @ManyToOne(
-    type => User,
-    user => user.rooms,
-  )
+  @ManyToOne((type) => User, (user) => user.rooms)
   host: User;
 
   @Column({ type: 'enum', enum: RoomType })
@@ -48,10 +45,7 @@ export class Room extends CoreEntity {
   @IsInt()
   price: number;
 
-  @OneToMany(
-    type => Discount,
-    discount => discount.room,
-  )
+  @OneToMany((type) => Discount, (discount) => discount.room)
   discounts: Discount[];
 
   @Column({ type: 'int', nullable: true })
@@ -82,16 +76,10 @@ export class Room extends CoreEntity {
   @IsString()
   description: string;
 
-  @OneToMany(
-    type => Photo,
-    photo => photo.room,
-  )
+  @OneToMany((type) => Photo, (photo) => photo.room)
   photos: Photo[];
 
-  @ManyToOne(
-    type => Country,
-    country => country.rooms,
-  )
+  @ManyToOne((type) => Country, (country) => country.rooms)
   country: Country;
 
   // ===== Address =====
@@ -117,49 +105,28 @@ export class Room extends CoreEntity {
   // ====================
 
   // ===== Options =====
-  @OneToMany(
-    type => RuleChoice,
-    rule => rule.room,
-  )
+  @OneToMany((type) => RuleChoice, (rule) => rule.room)
   ruleChoices: RuleChoice[];
 
-  @OneToMany(
-    type => CustomRule,
-    desc => desc.room,
-  )
+  @OneToMany((type) => CustomRule, (desc) => desc.room)
   customRules: CustomRule[];
 
-  @OneToMany(
-    type => DetailChoice,
-    detail => detail.room,
-  )
+  @OneToMany((type) => DetailChoice, (detail) => detail.room)
   detailChoices: DetailChoice[];
 
-  @ManyToMany(
-    type => AmenityItem,
-    amenityItem => amenityItem.rooms,
-  )
+  @ManyToMany((type) => AmenityItem, (amenityItem) => amenityItem.rooms)
   @JoinTable()
   amenities: AmenityItem[];
   // ====================
 
   // Inverse Side Relation
-  @OneToMany(
-    type => Reservation,
-    reservation => reservation.room,
-  )
+  @OneToMany((type) => Reservation, (reservation) => reservation.room)
   reservations: Reservation[];
 
-  @OneToMany(
-    type => Review,
-    review => review.room,
-  )
+  @OneToMany((type) => Review, (review) => review.room)
   reviews: Review[];
 
-  @ManyToMany(
-    type => List,
-    list => list.rooms,
-  )
+  @ManyToMany((type) => List, (list) => list.rooms)
   lists: List[];
 
   // ===== Domain Methods =====
@@ -220,16 +187,16 @@ export class Room extends CoreEntity {
     if (!this.reservations)
       throw new InternalServerErrorException("Rservations does't exist.");
     return !this.reservations
-      .filter(reservation => reservation.isScheduled())
-      .map(reservation => reservation.getStayTerm())
-      .some(otherStayRange => otherStayRange.intersect(stayTerm));
+      .filter((reservation) => reservation.isScheduled())
+      .map((reservation) => reservation.getStayTerm())
+      .some((otherStayRange) => otherStayRange.intersect(stayTerm));
   }
 
   private calculateDiscountFee(price: number, stayDays: number): number {
     if (!this.discounts)
       throw new InternalServerErrorException("Discounts does't exist.");
     return this.discounts
-      .map(discount => discount.calculateDiscountFee(price, stayDays))
+      .map((discount) => discount.calculateDiscountFee(price, stayDays))
       .reduce((acc, cur) => Math.max(acc, cur), 0);
   }
 

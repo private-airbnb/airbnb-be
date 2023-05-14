@@ -13,7 +13,7 @@ export function IsNonPrimitiveArray(validationOptions?: ValidationOptions) {
       constraints: [],
       options: validationOptions,
       validator: {
-        validate(value: any, args: ValidationArguments) {
+        validate(value: any, _args: ValidationArguments) {
           return (
             Array.isArray(value) &&
             value.reduce(
@@ -28,7 +28,7 @@ export function IsNonPrimitiveArray(validationOptions?: ValidationOptions) {
 }
 
 export function IsOnlyDate(validationOptions?: ValidationOptions) {
-  return function(object: Object, propertyName: string) {
+  return function (object: any, propertyName: string) {
     registerDecorator({
       name: 'IsOnlyDate',
       target: object.constructor,

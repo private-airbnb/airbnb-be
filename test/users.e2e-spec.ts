@@ -51,17 +51,17 @@ describe('Users (e2e)', () => {
     it('should create guest account', () => {
       return request(guestUser)
         .expect(201)
-        .expect(res => isUser(res.body));
+        .expect((res) => isUser(res.body));
     });
     it('should create admin account', () => {
       return request(adminUser)
         .expect(201)
-        .expect(res => isUser(res.body));
+        .expect((res) => isUser(res.body));
     });
     it('should fail if email is invalud', () => {
       return request({ ...guestUser, email: 'wrongEmail' })
         .expect(400)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body.message[0]).toEqual('올바른 이메일을 입력해주세요');
         });
     });
@@ -71,7 +71,7 @@ describe('Users (e2e)', () => {
         adminSecretKey: 'wrongSecret',
       })
         .expect(401)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty(
             'message',
             '어드민키가 일치하지 않습니다',
@@ -81,7 +81,7 @@ describe('Users (e2e)', () => {
     it('should fail if email already registered', () => {
       return request(guestUser)
         .expect(409)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty(
             'message',
             '이미 가입된 이메일입니다',
@@ -101,7 +101,7 @@ describe('Users (e2e)', () => {
     it('should sign guest user in', () => {
       return request({ email: guestUser.email, password: guestUser.password })
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           isJWT(res.body);
           guestToken = res.body.accessToken;
         });
@@ -109,7 +109,7 @@ describe('Users (e2e)', () => {
     it('should sign admin user in', () => {
       return request({ email: adminUser.email, password: adminUser.password })
         .expect(200)
-        .expect(res => {
+        .expect((res) => {
           isJWT(res.body);
           adminToken = res.body.accessToken;
         });
@@ -117,7 +117,7 @@ describe('Users (e2e)', () => {
     it('should fail if user does not exist', () => {
       return request({ email: 'nope@nope.com', password: guestUser.password })
         .expect(400)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty(
             'message',
             '아이디와 비밀번호를 확인해주세요',
@@ -127,7 +127,7 @@ describe('Users (e2e)', () => {
     it('should fail if password is wrong', () => {
       return request({ email: guestUser.email, password: 'wrongPassword' })
         .expect(400)
-        .expect(res => {
+        .expect((res) => {
           expect(res.body).toHaveProperty(
             'message',
             '아이디와 비밀번호를 확인해주세요',
@@ -142,19 +142,19 @@ describe('Users (e2e)', () => {
     it('should return all users', () => {
       return request(adminToken)
         .expect(200)
-        .expect(res => isArrayOf(res.body, isUser));
+        .expect((res) => isArrayOf(res.body, isUser));
     });
     it('should fail if token is invalid', () => {
       return request()
         .expect(401)
-        .expect(res =>
+        .expect((res) =>
           expect(res.body).toHaveProperty('message', '로그인이 필요합니다'),
         );
     });
     it('should fail if user is not admin', () => {
       return request(guestToken)
         .expect(403)
-        .expect(res =>
+        .expect((res) =>
           expect(res.body).toHaveProperty('message', 'Forbidden resource'),
         );
     });
@@ -166,13 +166,13 @@ describe('Users (e2e)', () => {
     it(`should return user's profile`, () => {
       return request(adminToken)
         .expect(200)
-        .expect(res => isUser(res.body));
+        .expect((res) => isUser(res.body));
     });
 
     it('should fail if token is invalid', () => {
       return request('')
         .expect(401)
-        .expect(res =>
+        .expect((res) =>
           expect(res.body).toHaveProperty('message', '로그인이 필요합니다'),
         );
     });
@@ -184,7 +184,7 @@ describe('Users (e2e)', () => {
     it(`should return user's profile`, () => {
       return request(guestId)
         .expect(200)
-        .expect(res => isUser(res.body));
+        .expect((res) => isUser(res.body));
     });
   });
 
@@ -206,7 +206,7 @@ describe('Users (e2e)', () => {
         lastName: 'Hong',
       })
         .expect(401)
-        .expect(res =>
+        .expect((res) =>
           expect(res.body).toHaveProperty(
             'message',
             '자신의 프로필만 변결할 수 있습니다',

@@ -4,7 +4,6 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { Verification } from '../auth/entities/varification.entity';
-import { UsersModule } from '../users/users.module';
 import { AuthService } from './auth.service';
 import { jwtConstants } from '../common/constants/auth.constants';
 import { JwtStrategy } from './strategies/jwt.strategy';

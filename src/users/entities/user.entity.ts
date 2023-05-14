@@ -37,7 +37,7 @@ export class User extends CoreEntity {
   @IsString()
   password: string;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ default: () => 'CURRENT_TIMESTAMP' })
   @IsDate()
   lastLogin: Date;
 
@@ -53,55 +53,33 @@ export class User extends CoreEntity {
   @IsString()
   avatar: string;
 
-  @OneToMany(
-    type => Role,
-    role => role.user,
-    { eager: true },
-  )
+  @OneToMany((type) => Role, (role) => role.user, { eager: true })
   roles: Role[];
 
   // ===== Inverse side Relation =====
 
-  @OneToMany(
-    type => List,
-    list => list.owner,
-  )
+  @OneToMany((type) => List, (list) => list.owner)
   saveLists: List[];
 
-  @OneToMany(
-    type => Room,
-    room => room.host,
-  )
+  @OneToMany((type) => Room, (room) => room.host)
   rooms: Room[];
 
-  @ManyToMany(
-    type => Reservation,
-    reservation => reservation.guests,
-  )
+  @ManyToMany((type) => Reservation, (reservation) => reservation.guests)
   reservations: Reservation[];
 
-  @OneToMany(
-    type => Review,
-    review => review.guest,
-  )
+  @OneToMany((type) => Review, (review) => review.guest)
   reviews: Review[];
 
   @ManyToMany(
-    type => Conversation,
-    conversation => conversation.participants,
+    (type) => Conversation,
+    (conversation) => conversation.participants,
   )
   conversations: Conversation[];
 
-  @OneToMany(
-    type => Message,
-    message => message.sender,
-  )
+  @OneToMany((type) => Message, (message) => message.sender)
   messages: Message[];
 
-  @OneToMany(
-    type => Payment,
-    payment => payment.user,
-  )
+  @OneToMany((type) => Payment, (payment) => payment.user)
   payments: Payment[];
 
   // ===== Security =====

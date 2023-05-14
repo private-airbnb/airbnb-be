@@ -10,16 +10,10 @@ export class List extends CoreEntity {
   @IsString()
   name: string;
 
-  @ManyToMany(
-    type => Room,
-    room => room.lists,
-  )
+  @ManyToMany((type) => Room, (room) => room.lists)
   @JoinTable()
   rooms: Room[];
 
-  @ManyToOne(
-    type => User,
-    user => user.saveLists,
-  )
+  @ManyToOne((type) => User, (user) => user.saveLists)
   owner: User;
 }
