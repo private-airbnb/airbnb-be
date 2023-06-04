@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Verification } from '../auth/entities/varification.entity';
+import { Verification } from '../auth/jwt/entities/verification.entity';
 import { MockRepository } from '../common/mocks/interfaces.mock';
 import { mockRepository } from '../common/mocks/services.mock';
 import { MailService } from '../mail/mail.service';
