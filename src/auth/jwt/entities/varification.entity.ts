@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
-import { CoreEntity } from '../../common/entities/core.entity';
+import { User } from '../../../users/entities/user.entity';
+import { CoreEntity } from '../../../common/entities/core.entity';
 
 @Entity()
 export class Verification extends CoreEntity {

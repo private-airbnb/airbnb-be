@@ -11,7 +11,6 @@ import { RoomsModule } from './rooms/rooms.module';
 import { ReservationsModule } from './reservations/reservations.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { ListsModule } from './lists/lists.module';
-import { AuthModule } from './auth/auth.module';
 import { CountriesModule } from './countries/countries.module';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
@@ -25,7 +24,7 @@ import { RequestMiddleware } from './common/middlewares/request.middleware';
 import { AppService } from './app.service';
 import { AppSettings, env } from './app.settings';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Verification } from './auth/entities/varification.entity';
+import { Verification } from './auth/jwt/entities/varification.entity';
 import { Role } from './users/entities/role.entity';
 import { User } from './users/entities/user.entity';
 import { Country } from './countries/entities/country.entity';
@@ -47,8 +46,14 @@ import {
 } from './rooms/entities/rule.entity';
 import { Room } from './rooms/entities/room.entity';
 import { AmenityGroup, AmenityItem } from './rooms/entities/amenity.entity';
+import { CategoriesModule } from './categories/categories.module';
+import { Category } from './categories/entities/category.entity';
+import { AppController } from './app.controller';
+import { AuthModule } from './auth/jwt/auth.module';
+import { GoogleOauthModule } from './auth/google/google-oauth.module';
+import { Oauth } from './users/entities/oauth.entity';
 
-const appsettings = AppSettings.forRoot();
+const appSettings = AppSettings.forRoot();
 
 const envFilePath = '.env';
 
@@ -74,6 +79,8 @@ const entities = [
   CustomRule,
   Detail,
   DetailChoice,
+  Category,
+  Oauth,
 ];
 
 const modules = [
@@ -84,22 +91,23 @@ const modules = [
   TypeOrmModule.forRootAsync({
     imports: [ConfigModule],
     useFactory: (configService: ConfigService) => ({
-      type: appsettings.database.type,
-      host: configService.get<string>('DB_HOST') || appsettings.database.host,
-      port: +configService.get<string>('DB_PORT') || appsettings.database.port,
+      type: appSettings.database.type,
+      host: configService.get<string>('DB_HOST') || appSettings.database.host,
+      port: +configService.get<string>('DB_PORT') || appSettings.database.port,
       username:
-        configService.get<string>('DB_USER') || appsettings.database.username,
+        configService.get<string>('DB_USER') || appSettings.database.username,
       password:
         configService.get<string>('DB_PASSWORD') ||
-        appsettings.database.password,
+        appSettings.database.password,
       database:
-        configService.get<string>('DB_NAME') || appsettings.database.database,
+        configService.get<string>('DB_NAME') || appSettings.database.database,
       schema:
-        configService.get<string>('DB_SCHEMA') || appsettings.database.schema,
+        configService.get<string>('DB_SCHEMA') || appSettings.database.schema,
       entities,
       synchronize: env('SYNCHRONIZE', true),
       logging: false,
       subscribers: [],
+      charset: 'utf8',
     }),
     inject: [ConfigService],
   }),
@@ -113,9 +121,12 @@ const modules = [
   MailModule,
   PhotosModule,
   DiscountsModule,
+  CategoriesModule,
+  GoogleOauthModule,
 ];
 @Module({
   imports: modules,
+  controllers: [AppController],
   providers: [
     AppService,
     {

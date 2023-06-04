@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
-import { Verification } from '../auth/entities/varification.entity';
 import { Repository } from 'typeorm';
-import { IPayload } from '../common/interfaces/auth.inferfaces';
+import { customThrowError } from 'src/common/utils/throw.utils';
+import { User } from 'src/users/entities/user.entity';
+import { Verification } from './entities/varification.entity';
+import { IPayload } from 'src/common/interfaces/auth.inferfaces';
 
 @Injectable()
 export class AuthService {
@@ -16,11 +17,6 @@ export class AuthService {
     private readonly verificationRepository: Repository<Verification>,
   ) {}
 
-  getAccessToken(user: IPayload): string {
-    const payload = { id: user.id, email: user.email };
-    return this.jwtService.sign(payload);
-  }
-
   async getUserByPayload(payload: IPayload): Promise<User> {
     return await this.userRepository.findOneBy({ id: payload.id });
   }
@@ -30,8 +26,9 @@ export class AuthService {
       where: { code: code },
       relations: ['user'],
     });
-    if (!verification)
-      throw new BadRequestException('유효하지 않은 코드입니다.');
+    if (!verification) {
+      customThrowError('This is an invalid code.', HttpStatus.BAD_REQUEST);
+    }
 
     verification.user.verified = true;
     await this.userRepository.save(verification.user);

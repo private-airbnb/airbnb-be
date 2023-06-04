@@ -18,6 +18,7 @@ export class AppSettings {
   jwt: Jwt = new Jwt();
   smtp: Smtp = new Smtp();
   rabbit: RabbitMQ = new RabbitMQ();
+  oauthGoogle: OAuthGoogle = new OAuthGoogle();
 
   cwd = '';
   production: ProductionMode = 'development';
@@ -96,7 +97,7 @@ export class Database {
 
   @Exclude()
   @IsNotEmpty({ message: 'Required DB_USER' })
-  username = env('DB_USER');
+  username = env('DB_USERNAME');
 
   @Exclude()
   @IsNotEmpty({ message: 'Required DB_PASSWORD in env' })
@@ -206,7 +207,8 @@ export class Redis {
         startupNodes: nodes,
         options: {
           scaleReads: 'all',
-          clusterRetryStrategy: function (_times) {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          clusterRetryStrategy: function (times) {
             return null;
           },
           redisOptions: {
@@ -260,6 +262,20 @@ export class Jwt {
   @IsNotEmpty({ message: 'required JWT_SECRET in env' })
   secret = env('JWT_SECRET');
   expiresIn = '30d';
+}
+
+export class OAuthGoogle {
+  @Exclude()
+  @IsNotEmpty({ message: 'required OAUTH_GOOGLE_CLIENT_ID in env' })
+  googleClientId = env('OAUTH_GOOGLE_CLIENT_ID');
+
+  @Exclude()
+  @IsNotEmpty({ message: 'required OAUTH_GOOGLE_SECRET in env' })
+  googleSecret = env('OAUTH_GOOGLE_SECRET');
+
+  @Exclude()
+  @IsNotEmpty({ message: 'required OAUTH_GOOGLE_REDIRECT in env' })
+  googleRedirect = env('OAUTH_GOOGLE_REDIRECT');
 }
 
 export function env(key: string, defaultValue = null) {

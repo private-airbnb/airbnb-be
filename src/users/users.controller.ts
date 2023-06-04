@@ -21,26 +21,43 @@ import { UserRole } from './entities/role.entity';
 import { DeepPartial } from 'typeorm';
 import { Transactional } from 'typeorm-transactional-cls-hooked';
 import { SignInUserDTO } from './dto/sign-in-user.dto';
+import { ForgotPasswordDTO } from './dto/forgot-password.dto';
+import { CreateNewPasswordDTO } from './dto/create-new-password.dto';
+import { InfoUserWithCredential } from './dto/info-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // @Public()
-  // @Post('sign-up')
-  // @Transactional()
-  // async createAccount(@Body() createUserDto: CreateUserDto): Promise<User> {
-  //   return await this.usersService.signUp(createUserDto);
-  // }
+  @Public()
+  @Post('sign-up')
+  async createAccount(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return await this.usersService.signUp(createUserDto);
+  }
 
-  // @Public()
-  // @Post('sign-in')
-  // @HttpCode(200)
-  // async signIn(
-  //   @Body() loginUesrDto: SignInUserDTO,
-  // ): Promise<{ accessToken: string }> {
-  //   return { accessToken: await this.usersService.signIn(loginUesrDto) };
-  // }
+  @Public()
+  @Post('sign-in')
+  async signIn(
+    @Body() loginUser: SignInUserDTO,
+  ): Promise<InfoUserWithCredential> {
+    return await this.usersService.signIn(loginUser);
+  }
+
+  @Public()
+  @Post('forgot-password')
+  async forgotPassword(
+    @Body() forgotPassword: ForgotPasswordDTO,
+  ): Promise<boolean> {
+    return this.usersService.forgotPassword(forgotPassword);
+  }
+
+  @Public()
+  @Post('create-new-password')
+  async createNewPassword(
+    @Body() model: CreateNewPasswordDTO,
+  ): Promise<boolean> {
+    return this.usersService.createNewPassword(model);
+  }
 
   // @Roles(UserRole.Admin)
   // @Get()

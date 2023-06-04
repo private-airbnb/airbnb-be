@@ -3,37 +3,30 @@ import { CoreEntity } from '../../common/entities/core.entity';
 import { Payment } from '../../common/entities/payment.entity';
 import { Reservation } from '../../reservations/entities/reservation.entity';
 import { Room } from '../../rooms/entities/room.entity';
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  ManyToMany,
-  OneToMany,
-} from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import { InternalServerErrorException } from '@nestjs/common';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 import { Conversation } from '../../common/entities/conversation.entity';
 import { Message } from '../../common/entities/message.entity';
 import { List } from '../../lists/entities/list.entity';
 import { Review } from '../../reviews/entities/review.entity';
 import { Role } from './role.entity';
+import { Exclude, Expose } from 'class-transformer';
+import { Oauth } from './oauth.entity';
 
 @Entity()
 export class User extends CoreEntity {
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   @IsString()
   firstName: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 255 })
   @IsString()
   lastName: string;
 
   @Column({ unique: true })
-  @IsEmail({}, { message: '올바른 이메일을 입력해주세요' })
+  @IsEmail()
   email: string;
 
-  @Column({ select: false })
+  @Column({ nullable: true })
   @IsString()
   password: string;
 
@@ -53,58 +46,37 @@ export class User extends CoreEntity {
   @IsString()
   avatar: string;
 
-  @OneToMany((type) => Role, (role) => role.user, { eager: true })
+  @OneToMany(() => Role, (role) => role.user, { eager: true })
   roles: Role[];
 
   // ===== Inverse side Relation =====
 
-  @OneToMany((type) => List, (list) => list.owner)
+  @OneToMany(() => List, (list) => list.owner)
   saveLists: List[];
 
-  @OneToMany((type) => Room, (room) => room.host)
+  @OneToMany(() => Room, (room) => room.host)
   rooms: Room[];
 
-  @ManyToMany((type) => Reservation, (reservation) => reservation.guests)
+  @ManyToMany(() => Reservation, (reservation) => reservation.guests)
   reservations: Reservation[];
 
-  @OneToMany((type) => Review, (review) => review.guest)
+  @OneToMany(() => Review, (review) => review.guest)
   reviews: Review[];
 
-  @ManyToMany(
-    (type) => Conversation,
-    (conversation) => conversation.participants,
-  )
+  @ManyToMany(() => Conversation, (conversation) => conversation.participants)
   conversations: Conversation[];
 
-  @OneToMany((type) => Message, (message) => message.sender)
+  @OneToMany(() => Message, (message) => message.sender)
   messages: Message[];
 
-  @OneToMany((type) => Payment, (payment) => payment.user)
+  @OneToMany(() => Payment, (payment) => payment.user)
   payments: Payment[];
 
-  // ===== Security =====
-  @BeforeInsert()
-  @BeforeUpdate()
-  async hashPassword(): Promise<void> {
-    if (this.password) {
-      try {
-        const saltOrRounds = 10;
-        this.password = await bcrypt.hash(this.password, saltOrRounds);
-      } catch (e) {
-        console.log(e);
-        throw new InternalServerErrorException();
-      }
-    }
-  }
+  @OneToMany(() => Oauth, (oauth) => oauth.user)
+  oauth: Oauth[];
 
-  // ===== Methods =====
-  async checkPassword(aPassword: string): Promise<boolean> {
-    try {
-      const ok = await bcrypt.compare(aPassword, this.password);
-      return ok;
-    } catch (e) {
-      console.log(e);
-      throw new InternalServerErrorException();
-    }
+  // ===== Method =====
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
   }
 }
