@@ -12,9 +12,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Role, UserRole } from './entities/role.entity';
 import { User } from './entities/user.entity';
-import { Verification } from '../auth/jwt/entities/varification.entity';
+import { Verification } from '../auth/jwt/entities/verification.entity';
 import { generateUUIDv4 } from '../common/utils/mail.utils';
-import { SignInGoogleUserDTO, SignInUserDTO } from './dto/sign-in-user.dto';
+import { SignInUserDTO } from './dto/sign-in-user.dto';
 import { ParallelAsync } from '../common/utils/async.utils';
 import UserRepository from './repositories/user.repository';
 import RoleRepository from './repositories/role.repository';
@@ -25,11 +25,15 @@ import { ForgotPasswordDTO } from './dto/forgot-password.dto';
 import { TokenHelper } from 'src/common/helpers/token.helper';
 import { TOKEN_TYPE } from 'src/common/enums/tokenType.enum';
 import { CreateNewPasswordDTO } from './dto/create-new-password.dto';
-import { InfoUser, InfoUserWithCredential } from './dto/info-user.dto';
 import { AuthService } from 'src/auth/jwt/auth.service';
-import { CreateUserWithGoogleDto } from './dto/create-user-with-google.dto';
+import {
+  CreateUserWithSocialNetworkDto,
+  IntegrateWithSocialNetworkDto,
+} from './dto/create-user-with-social-network.dto';
 import OAuthRepository from './repositories/oauth.repository';
-
+import { Oauth } from './entities/oauth.entity';
+import { pick } from 'lodash';
+import { InfoUserDto, InfoUserWithCredentialDto } from './dto/info-user.dto';
 @Injectable()
 export class UsersService {
   private expireToken = 1;
@@ -47,7 +51,7 @@ export class UsersService {
     private readonly verificationRepository: VerificationRepository,
   ) {}
 
-  async signUp(model: CreateUserDto): Promise<User> {
+  async signUp(model: CreateUserDto): Promise<InfoUserDto> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -118,7 +122,7 @@ export class UsersService {
 
       this.mailService.sendVerifyEmail(emailCode, email);
 
-      return user;
+      return new InfoUserDto(user);
     } catch (error) {
       await queryRunner.rollbackTransaction();
       customThrowError(
@@ -132,9 +136,9 @@ export class UsersService {
     }
   }
 
-  async loginWithGoogle(
-    model: CreateUserWithGoogleDto,
-  ): Promise<InfoUser | InfoUserWithCredential> {
+  async loginWithSocialNetwork(
+    model: CreateUserWithSocialNetworkDto,
+  ): Promise<InfoUserDto | InfoUserWithCredentialDto> {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -142,21 +146,27 @@ export class UsersService {
       const { providerId, provider, firstName, lastName, email, avatar } =
         model;
 
-      const alreadySignUp = await this.oauthRepository.exist({
-        where: { providerId },
-      });
+      const alreadyLoginWithSocialNetwork = await this.userRepository.findOneBy(
+        { email, oauth: { providerId } },
+      );
 
-      if (alreadySignUp) {
-        return await this.signInWithGoogle({ providerId, email });
+      if (alreadyLoginWithSocialNetwork) {
+        return await this.signInWithSocialNetwork(
+          alreadyLoginWithSocialNetwork,
+        );
       }
 
-      const exists = await this.userRepository.exist({ where: { email } });
+      const userExists = await this.userRepository.findOne({
+        where: { email },
+        select: ['id'],
+      });
 
-      if (exists) {
-        customThrowError(
-          'This email has already been registered',
-          HttpStatus.BAD_REQUEST,
+      if (userExists && !alreadyLoginWithSocialNetwork) {
+        await this.integrateWithSocialNetwork(
+          userExists,
+          pick(model, ['provider', 'providerId']),
         );
+        return await this.signInWithSocialNetwork(userExists);
       }
 
       const user = await this.userRepository.save(
@@ -196,7 +206,7 @@ export class UsersService {
 
       this.mailService.sendVerifyEmail(emailCode, email);
 
-      return new InfoUser(user);
+      return new InfoUserDto(user);
     } catch (error) {
       await queryRunner.rollbackTransaction();
       customThrowError(
@@ -213,7 +223,7 @@ export class UsersService {
   async signIn({
     email,
     password,
-  }: SignInUserDTO): Promise<InfoUserWithCredential> {
+  }: SignInUserDTO): Promise<InfoUserWithCredentialDto> {
     const user = await this.userRepository.findOne({
       where: { email },
     });
@@ -236,37 +246,45 @@ export class UsersService {
         `${this.expireToken}d`,
       );
 
-      return new InfoUserWithCredential(user, accessToken);
+      return new InfoUserWithCredentialDto(user, accessToken);
     }
 
     customThrowError(`Invalid Credential`, HttpStatus.UNAUTHORIZED);
   }
 
-  private async signInWithGoogle({
-    providerId,
-    email,
-  }: SignInGoogleUserDTO): Promise<InfoUserWithCredential> {
-    const googleUser = await this.userRepository.findOne({
-      where: { email, oauth: { providerId } },
-    });
-
-    if (googleUser) {
-      googleUser.lastLogin = new Date();
-      this.userRepository.save(googleUser);
+  private async signInWithSocialNetwork(
+    socialUser: User,
+  ): Promise<InfoUserWithCredentialDto> {
+    if (socialUser) {
+      socialUser.lastLogin = new Date();
+      this.userRepository.save(socialUser);
 
       const accessToken = await this.tokenHelper.createToken(
         {
-          userId: googleUser.id,
-          role: googleUser.roles,
+          userId: socialUser.id,
+          role: socialUser.roles,
           type: TOKEN_TYPE.LOGIN_TOKEN,
         },
         `${this.expireToken}d`,
       );
 
-      return new InfoUserWithCredential(googleUser, accessToken);
+      return new InfoUserWithCredentialDto(socialUser, accessToken);
     }
 
     customThrowError(`Invalid Credential`, HttpStatus.UNAUTHORIZED);
+  }
+
+  private async integrateWithSocialNetwork(
+    user: User,
+    model: IntegrateWithSocialNetworkDto,
+  ): Promise<Oauth> {
+    return this.oauthRepository.save(
+      this.oauthRepository.create({
+        userId: user.id,
+        provider: model.provider,
+        providerId: model.providerId,
+      }),
+    );
   }
 
   async forgotPassword(model: ForgotPasswordDTO): Promise<boolean> {

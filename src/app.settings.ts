@@ -96,7 +96,7 @@ export class Database {
   port = parseInt(env('DB_PORT'));
 
   @Exclude()
-  @IsNotEmpty({ message: 'Required DB_USER' })
+  @IsNotEmpty({ message: 'Required DB_USERNAME' })
   username = env('DB_USERNAME');
 
   @Exclude()

@@ -22,15 +22,7 @@ import {
 } from 'typeorm';
 import { AmenityItem } from './amenity.entity';
 import { CustomRule, DetailChoice, RuleChoice } from './rule.entity';
-
-export enum RoomType {
-  Apartment = 'Apartment',
-  House = 'House',
-  SecondaryUnit = 'SecondaryUnit',
-  UniqueSpace = 'UniqueSpace',
-  BedAndBreakfast = 'BedAndBreakfast',
-  BoutiqueHotel = 'BoutiqueHotel',
-}
+import { RoomType } from 'src/common/enums/roomType.enum';
 
 @Entity()
 export class Room extends CoreEntity {

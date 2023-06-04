@@ -1,5 +1,5 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Controller, Get, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 import { GoogleOauthGuard } from './google-oauth.guard';
 import { Anonymous } from 'src/common/decorators/anonymous.decorator';
 
@@ -16,7 +16,7 @@ export class GoogleOauthController {
   @Get('redirect')
   @UseGuards(GoogleOauthGuard)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  googleAuthRedirect(@Req() req: Request, @Res() res: Response) {
+  googleAuthRedirect(@Req() req: Request) {
     // For now, we'll just show the user object
     return req.user;
   }

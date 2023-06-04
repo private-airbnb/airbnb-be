@@ -4,7 +4,7 @@ import { UsersController } from './users.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Role } from './entities/role.entity';
-import { Verification } from '../auth/jwt/entities/varification.entity';
+import { Verification } from '../auth/jwt/entities/verification.entity';
 import { MailModule } from '../mail/mail.module';
 import CourseOrm from './users.orm';
 import UserRepository from './repositories/user.repository';

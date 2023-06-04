@@ -1,8 +1,10 @@
 import { Exclude } from 'class-transformer';
 import { Role } from '../entities/role.entity';
 import { User } from '../entities/user.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class InfoUser {
+export class InfoUserDto {
+  @ApiProperty()
   id: number;
   firstName: string;
   lastName: string;
@@ -23,7 +25,8 @@ export class InfoUser {
   }
 }
 
-export class InfoUserWithCredential extends InfoUser {
+export class InfoUserWithCredentialDto extends InfoUserDto {
+  @ApiProperty()
   accessToken: string;
 
   constructor(partial: Partial<User>, accessToken: string) {

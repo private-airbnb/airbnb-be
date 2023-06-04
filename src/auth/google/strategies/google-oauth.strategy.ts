@@ -1,10 +1,10 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AppSettings } from 'src/app.settings';
 import { UsersService } from 'src/users/users.service';
-import { CreateUserWithGoogleDto } from 'src/users/dto/create-user-with-google.dto';
+import { CreateUserWithSocialNetworkDto } from 'src/users/dto/create-user-with-social-network.dto';
 
 @Injectable()
 export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
@@ -35,7 +35,7 @@ export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
   ): Promise<any> {
     const { id, name, emails, photos, provider } = profile;
 
-    const model: CreateUserWithGoogleDto = {
+    const model: CreateUserWithSocialNetworkDto = {
       providerId: id,
       firstName: name.givenName,
       lastName: name.familyName,
@@ -44,7 +44,9 @@ export class GoogleOauthStrategy extends PassportStrategy(Strategy, 'google') {
       provider,
     };
 
-    const validateResult = await this.usersService.loginWithGoogle(model);
+    const validateResult = await this.usersService.loginWithSocialNetwork(
+      model,
+    );
     done(null, validateResult);
   }
 }

@@ -4,15 +4,6 @@ import { Photo } from '../../photos/entries/photo.entity';
 import { Column, Entity, JoinTable, ManyToMany, OneToOne } from 'typeorm';
 import { Room } from 'src/rooms/entities/room.entity';
 
-export enum RoomType {
-  House = 'House',
-  Apartment = 'Apartment',
-  UniqueSpace = 'UniqueSpace',
-  BoutiqueHotel = 'BoutiqueHotel',
-  SecondaryUnit = 'SecondaryUnit',
-  BedAndBreakfast = 'BedAndBreakfast',
-}
-
 @Entity()
 export class Category extends CoreEntity {
   @Column({ type: 'varchar' })

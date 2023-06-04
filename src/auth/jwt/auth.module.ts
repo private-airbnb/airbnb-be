@@ -7,7 +7,7 @@ import { AuthController } from './auth.controller';
 import { jwtConstants } from 'src/common/constants/auth.constants';
 import { User } from 'src/users/entities/user.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { Verification } from './entities/varification.entity';
+import { Verification } from './entities/verification.entity';
 
 @Module({
   imports: [

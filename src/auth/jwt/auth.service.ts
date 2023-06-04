@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { customThrowError } from 'src/common/utils/throw.utils';
 import { User } from 'src/users/entities/user.entity';
-import { Verification } from './entities/varification.entity';
+import { Verification } from './entities/verification.entity';
 import { IPayload } from 'src/common/interfaces/auth.inferfaces';
 
 @Injectable()

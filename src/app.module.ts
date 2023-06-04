@@ -24,7 +24,7 @@ import { RequestMiddleware } from './common/middlewares/request.middleware';
 import { AppService } from './app.service';
 import { AppSettings, env } from './app.settings';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { Verification } from './auth/jwt/entities/varification.entity';
+import { Verification } from './auth/jwt/entities/verification.entity';
 import { Role } from './users/entities/role.entity';
 import { User } from './users/entities/user.entity';
 import { Country } from './countries/entities/country.entity';
@@ -95,7 +95,8 @@ const modules = [
       host: configService.get<string>('DB_HOST') || appSettings.database.host,
       port: +configService.get<string>('DB_PORT') || appSettings.database.port,
       username:
-        configService.get<string>('DB_USER') || appSettings.database.username,
+        configService.get<string>('DB_USERNAME') ||
+        appSettings.database.username,
       password:
         configService.get<string>('DB_PASSWORD') ||
         appSettings.database.password,
@@ -107,7 +108,6 @@ const modules = [
       synchronize: env('SYNCHRONIZE', true),
       logging: false,
       subscribers: [],
-      charset: 'utf8',
     }),
     inject: [ConfigService],
   }),

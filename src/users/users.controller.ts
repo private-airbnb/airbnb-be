@@ -23,7 +23,7 @@ import { Transactional } from 'typeorm-transactional-cls-hooked';
 import { SignInUserDTO } from './dto/sign-in-user.dto';
 import { ForgotPasswordDTO } from './dto/forgot-password.dto';
 import { CreateNewPasswordDTO } from './dto/create-new-password.dto';
-import { InfoUserWithCredential } from './dto/info-user.dto';
+import { InfoUserDto, InfoUserWithCredentialDto } from './dto/info-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -31,7 +31,9 @@ export class UsersController {
 
   @Public()
   @Post('sign-up')
-  async createAccount(@Body() createUserDto: CreateUserDto): Promise<User> {
+  async createAccount(
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<InfoUserDto> {
     return await this.usersService.signUp(createUserDto);
   }
 
@@ -39,7 +41,7 @@ export class UsersController {
   @Post('sign-in')
   async signIn(
     @Body() loginUser: SignInUserDTO,
-  ): Promise<InfoUserWithCredential> {
+  ): Promise<InfoUserWithCredentialDto> {
     return await this.usersService.signIn(loginUser);
   }
 
