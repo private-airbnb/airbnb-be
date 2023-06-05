@@ -52,6 +52,8 @@ import { AppController } from './app.controller';
 import { AuthModule } from './auth/jwt/auth.module';
 import { GoogleOauthModule } from './auth/google/google-oauth.module';
 import { Oauth } from './users/entities/oauth.entity';
+import { LogModule } from './common/modules/log/log.module';
+import { Log } from './common/modules/log/log.entity';
 
 const appSettings = AppSettings.forRoot();
 
@@ -81,6 +83,7 @@ const entities = [
   DetailChoice,
   Category,
   Oauth,
+  Log,
 ];
 
 const modules = [
@@ -123,6 +126,7 @@ const modules = [
   DiscountsModule,
   CategoriesModule,
   GoogleOauthModule,
+  LogModule,
 ];
 @Module({
   imports: modules,

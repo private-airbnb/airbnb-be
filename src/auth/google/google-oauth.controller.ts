@@ -1,7 +1,7 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
-import { GoogleOauthGuard } from './google-oauth.guard';
 import { Anonymous } from 'src/common/decorators/anonymous.decorator';
+import { GoogleOauthGuard } from 'src/common/guards/google-oauth.guard';
 
 @Anonymous()
 @Controller('auth/google')

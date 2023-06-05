@@ -24,10 +24,16 @@ import { SignInUserDTO } from './dto/sign-in-user.dto';
 import { ForgotPasswordDTO } from './dto/forgot-password.dto';
 import { CreateNewPasswordDTO } from './dto/create-new-password.dto';
 import { InfoUserDto, InfoUserWithCredentialDto } from './dto/info-user.dto';
+import { UserDeco } from 'src/common/decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @Get()
+  async getInfoUser(@UserDeco() user): Promise<InfoUserDto> {
+    return this.usersService.getInfoUser(user.userId);
+  }
 
   @Public()
   @Post('sign-up')

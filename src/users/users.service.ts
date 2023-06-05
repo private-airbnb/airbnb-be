@@ -228,12 +228,10 @@ export class UsersService {
       where: { email },
     });
 
-    const isMatch = await this.passwordHelper.isCompare(
-      password,
-      user.password,
-    );
+    const isMatch =
+      user && (await this.passwordHelper.isCompare(password, user.password));
 
-    if (user && isMatch) {
+    if (isMatch) {
       user.lastLogin = new Date();
       this.userRepository.save(user);
 
@@ -364,12 +362,13 @@ export class UsersService {
     }
   }
 
-  async findAll(): Promise<User[]> {
-    return await this.userRepository.find();
+  async getInfoUser(id: number): Promise<InfoUserDto> {
+    const user = await this.userRepository.findOneByOrFail({ id });
+    return new InfoUserDto(user);
   }
 
-  async findOne(id: number): Promise<User> {
-    return await this.userRepository.findOneByOrFail({ id });
+  async findAll(): Promise<User[]> {
+    return await this.userRepository.find();
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<boolean> {

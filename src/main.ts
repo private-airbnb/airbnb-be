@@ -5,6 +5,9 @@ import { AppModule } from './app.module';
 import { AppSettings } from './app.settings';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
+import { LogModule } from './common/modules/log/log.module';
+import { LogService } from './common/modules/log/log.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -13,6 +16,7 @@ async function bootstrap() {
 
   const appsettings = AppSettings.forRoot();
   const reflector = new Reflector();
+  const logService = app.select(LogModule).get(LogService);
 
   // Config swagger
   const swaggerOptions = new DocumentBuilder()
@@ -33,6 +37,7 @@ async function bootstrap() {
 
   app.enableCors();
   app.useGlobalGuards(new JwtAuthGuard(reflector));
+  app.useGlobalFilters(new HttpExceptionFilter(logService));
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   app.use((req, res, next) => {
