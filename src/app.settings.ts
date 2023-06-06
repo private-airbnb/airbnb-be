@@ -261,7 +261,13 @@ export class Jwt {
   @Exclude()
   @IsNotEmpty({ message: 'required JWT_SECRET in env' })
   secret = env('JWT_SECRET');
-  expiresIn = '30d';
+
+  @Exclude()
+  saltOrRound = env('SALT_OR_ROUND', 10);
+
+  @Exclude()
+  @IsNotEmpty({ message: 'required JWT_ACCESS_EXPIRED in env' })
+  accessExpires = env('JWT_ACCESS_EXPIRES', 86400);
 }
 
 export class OAuthGoogle {
@@ -275,7 +281,10 @@ export class OAuthGoogle {
 
   @Exclude()
   @IsNotEmpty({ message: 'required OAUTH_GOOGLE_REDIRECT in env' })
-  googleRedirect = env('OAUTH_GOOGLE_REDIRECT');
+  googleRedirect = env(
+    'OAUTH_GOOGLE_REDIRECT',
+    'http://localhost:8080/auth/google/redirect',
+  );
 }
 
 export function env(key: string, defaultValue = null) {

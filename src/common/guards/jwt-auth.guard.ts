@@ -1,11 +1,13 @@
 import {
   ExecutionContext,
+  HttpStatus,
   Injectable,
-  UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 import { IS_PUBLIC_KEY } from '../decorators/public.decorator';
+import { customThrowError } from '../utils/throw.utils';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -18,15 +20,27 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       context.getHandler(),
       context.getClass(),
     ]);
+
     if (isPublic) {
       return true;
     }
-    return super.canActivate(context);
+
+    const activated: any = super.canActivate(context);
+
+    if (activated.catch) {
+      activated.catch((error) => {
+        Logger.error(error);
+      });
+    }
+    return <boolean | Promise<boolean>>activated;
   }
 
   handleRequest(err, user) {
-    if (err || !user || !user.userID) {
-      throw err || new UnauthorizedException('로그인이 필요합니다');
+    if (err || !user) {
+      throw (
+        err ||
+        new customThrowError('Login is required', HttpStatus.UNAUTHORIZED)
+      );
     }
     return user;
   }

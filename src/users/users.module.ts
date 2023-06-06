@@ -14,6 +14,7 @@ import { PasswordHelper } from 'src/common/helpers/password.helper';
 import { TokenHelper } from 'src/common/helpers/token.helper';
 import { AuthModule } from 'src/auth/jwt/auth.module';
 import OAuthRepository from './repositories/oauth.repository';
+import { AppSettings } from 'src/app.settings';
 
 @Module({
   imports: [
@@ -30,6 +31,10 @@ import OAuthRepository from './repositories/oauth.repository';
     PasswordHelper,
     VerificationRepository,
     OAuthRepository,
+    {
+      provide: AppSettings,
+      useValue: AppSettings.forRoot(),
+    },
   ],
   exports: [UsersService],
 })

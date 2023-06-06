@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import * as generator from 'generate-password';
+import { AppSettings } from 'src/app.settings';
 
 @Injectable()
 export class PasswordHelper {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly appSettings: AppSettings) {}
 
   async getCiphertext(plaintext: string): Promise<string> {
     const hash = await bcrypt.hash(
       plaintext,
-      +this.configService.get<string>('SALT_OR_ROUND'),
+      +this.appSettings.jwt.saltOrRound,
     );
     return hash;
   }

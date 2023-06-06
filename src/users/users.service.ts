@@ -36,9 +36,6 @@ import { pick } from 'lodash';
 import { InfoUserDto, InfoUserWithCredentialDto } from './dto/info-user.dto';
 @Injectable()
 export class UsersService {
-  private expireToken = 1;
-  private expireTokenCookie = 1;
-
   constructor(
     private readonly dataSource: DataSource,
     private readonly tokenHelper: TokenHelper,
@@ -234,15 +231,7 @@ export class UsersService {
     if (isMatch) {
       user.lastLogin = new Date();
       this.userRepository.save(user);
-
-      const accessToken = await this.tokenHelper.createToken(
-        {
-          userId: user.id,
-          role: user.roles,
-          type: TOKEN_TYPE.LOGIN_TOKEN,
-        },
-        `${this.expireToken}d`,
-      );
+      const accessToken = this.authService.getAccessToken(user);
 
       return new InfoUserWithCredentialDto(user, accessToken);
     }
@@ -257,14 +246,7 @@ export class UsersService {
       socialUser.lastLogin = new Date();
       this.userRepository.save(socialUser);
 
-      const accessToken = await this.tokenHelper.createToken(
-        {
-          userId: socialUser.id,
-          role: socialUser.roles,
-          type: TOKEN_TYPE.LOGIN_TOKEN,
-        },
-        `${this.expireToken}d`,
-      );
+      const accessToken = this.authService.getAccessToken(socialUser);
 
       return new InfoUserWithCredentialDto(socialUser, accessToken);
     }
@@ -292,15 +274,13 @@ export class UsersService {
       customThrowError('Email not found!', HttpStatus.NOT_FOUND);
     }
 
-    const expire = `${this.expireTokenCookie}h`;
-
     const token = this.tokenHelper.createToken(
       {
         id: user.id,
         email: user.email,
         type: TOKEN_TYPE.FORGOT_PASSWORD_TOKEN,
       },
-      expire,
+      `1h`,
     );
 
     this.mailService.sendForgotPassword(token, model.email, user.fullName);

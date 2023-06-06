@@ -4,17 +4,21 @@ import { PassportModule } from '@nestjs/passport';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { jwtConstants } from 'src/common/constants/auth.constants';
 import { User } from 'src/users/entities/user.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { Verification } from './entities/verification.entity';
+import { AppSettings } from 'src/app.settings';
+
+const appSettings = AppSettings.forRoot();
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '30 days' },
+      secret: appSettings.jwt.secret,
+      signOptions: {
+        expiresIn: appSettings.jwt.accessExpires,
+      },
     }),
     TypeOrmModule.forFeature([User, Verification]),
   ],

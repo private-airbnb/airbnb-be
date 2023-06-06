@@ -1,9 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { jwtConstants } from '../../../common/constants/auth.constants';
 import { User } from '../../../users/entities/user.entity';
 import { AuthService } from '../auth.service';
+import { AppSettings } from 'src/app.settings';
+
+const appSettings = AppSettings.forRoot();
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -11,15 +17,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret,
+      secretOrKey: appSettings.jwt.secret,
+      passReqToCallback: true,
     });
   }
 
   async validate(payload: any): Promise<User> {
     const user: User = await this.authService.getUserByPayload(payload);
-    if (!user) throw new NotFoundException('존재하지 않는 유저입니다.');
-    // if (!user.verified)
-    //   throw new BadRequestException('이메일 인증을 완료해주세요.');
+    if (!user) throw new NotFoundException('This user does not exist.');
+    if (!user.verified)
+      throw new BadRequestException('Please complete email verification.');
     return user;
   }
 }

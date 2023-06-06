@@ -6,6 +6,7 @@ import { customThrowError } from 'src/common/utils/throw.utils';
 import { User } from 'src/users/entities/user.entity';
 import { Verification } from './entities/verification.entity';
 import { IPayload } from 'src/common/interfaces/auth.inferfaces';
+import { InfoUserDto } from 'src/users/dto/info-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +17,11 @@ export class AuthService {
     @InjectRepository(Verification)
     private readonly verificationRepository: Repository<Verification>,
   ) {}
+
+  getAccessToken(user: InfoUserDto): string {
+    const payload = { id: user.id, email: user.email, roles: user.roles };
+    return this.jwtService.sign(payload);
+  }
 
   async getUserByPayload(payload: IPayload): Promise<User> {
     return await this.userRepository.findOneBy({ id: payload.id });
