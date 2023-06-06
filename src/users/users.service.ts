@@ -23,7 +23,6 @@ import { customThrowError } from 'src/common/utils/throw.utils';
 import { PasswordHelper } from 'src/common/helpers/password.helper';
 import { ForgotPasswordDTO } from './dto/forgot-password.dto';
 import { TokenHelper } from 'src/common/helpers/token.helper';
-import { TOKEN_TYPE } from 'src/common/enums/tokenType.enum';
 import { CreateNewPasswordDTO } from './dto/create-new-password.dto';
 import { AuthService } from 'src/auth/jwt/auth.service';
 import {
@@ -278,7 +277,6 @@ export class UsersService {
       {
         id: user.id,
         email: user.email,
-        type: TOKEN_TYPE.FORGOT_PASSWORD_TOKEN,
       },
       `1h`,
     );
@@ -293,10 +291,7 @@ export class UsersService {
       customThrowError('Invalid Credential', HttpStatus.UNAUTHORIZED);
     }
 
-    const infoUser = this.tokenHelper.verifyToken(
-      model.token,
-      TOKEN_TYPE.FORGOT_PASSWORD_TOKEN,
-    );
+    const infoUser = this.tokenHelper.verifyToken(model.token);
 
     if (infoUser.newUser) model.shouldVerify = true;
 

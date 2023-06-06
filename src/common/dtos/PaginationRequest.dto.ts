@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
 import { IsInt, IsOptional, Min } from 'class-validator';
-import { SortDirection } from '../enums/sortDirection.enum';
+import { SortDirection } from '../enums/sort-direction.enum';
 
 export class PaginationRequest<T> {
   @ApiProperty()

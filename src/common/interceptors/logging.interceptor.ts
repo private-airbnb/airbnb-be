@@ -19,7 +19,8 @@ export class LoggingInterceptor implements NestInterceptor {
 
     const now = Date.now();
     return next.handle().pipe(
-      tap((_t) => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      tap((t) => {
         logger.log(
           `End: ${context.getClass().name} - ${context.getHandler().name} (${
             Date.now() - now

@@ -8,9 +8,9 @@ export class Message extends CoreEntity {
   @Column({ type: 'text' })
   content: string;
 
-  @ManyToOne((_type) => User, (user) => user.messages)
+  @ManyToOne(() => User, (user) => user.messages)
   sender: User;
 
-  @ManyToOne((_type) => Conversation, (conversation) => conversation.messages)
+  @ManyToOne(() => Conversation, (conversation) => conversation.messages)
   conversation: Conversation;
 }

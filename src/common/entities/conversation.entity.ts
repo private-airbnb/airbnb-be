@@ -6,14 +6,14 @@ import { Message } from './message.entity';
 
 @Entity()
 export class Conversation extends CoreEntity {
-  @OneToOne((_type) => Reservation)
+  @OneToOne(() => Reservation)
   @JoinTable()
   reservation: Reservation;
 
-  @ManyToMany((_type) => User, (user) => user.conversations)
+  @ManyToMany(() => User, (user) => user.conversations)
   @JoinTable()
   participants: User[];
 
-  @OneToMany((_type) => Message, (message) => message.conversation)
+  @OneToMany(() => Message, (message) => message.conversation)
   messages: Message[];
 }

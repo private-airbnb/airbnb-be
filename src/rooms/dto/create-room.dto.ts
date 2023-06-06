@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { IsNonPrimitiveArray } from '../../common/middlewares/class-validator';
 import { CreatePhotoDto } from '../../photos/dtos/create-photo.dto';
-import { RoomType } from 'src/common/enums/roomType.enum';
+import { RoomType } from 'src/common/enums/room-type.enum';
 
 export class CreateRoomDto {
   @IsEnum(RoomType)

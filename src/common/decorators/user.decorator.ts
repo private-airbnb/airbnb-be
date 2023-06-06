@@ -3,7 +3,7 @@ import AppUser from 'src/app.user';
 import { DeviceDetector } from '../helpers/device-detector.helper';
 
 const deviceDetector = new DeviceDetector();
-export const UserPipe = createParamDecorator(
+export const User = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
     if (request && request.user) {

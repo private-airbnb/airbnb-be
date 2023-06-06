@@ -2,7 +2,6 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as jsonwebtoken from 'jsonwebtoken';
 import { SignOptions } from 'jsonwebtoken';
-import { TOKEN_TYPE } from '../enums/tokenType.enum';
 import { customThrowError } from '../utils/throw.utils';
 
 @Injectable()
@@ -31,15 +30,9 @@ export class TokenHelper {
     }
   }
 
-  verifyToken(token: string, type = TOKEN_TYPE.LOGIN_TOKEN): any {
+  verifyToken(token: string): any {
     try {
-      const data: any = jsonwebtoken.verify(token, this.tokenSecret);
-
-      if (data.type !== type) {
-        customThrowError('Type of token invalid', HttpStatus.UNAUTHORIZED);
-      }
-
-      return data;
+      return jsonwebtoken.verify(token, this.tokenSecret);
     } catch (error: any) {
       customThrowError(
         'Invalid Credential',

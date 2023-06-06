@@ -22,7 +22,7 @@ import {
 } from 'typeorm';
 import { AmenityItem } from './amenity.entity';
 import { CustomRule, DetailChoice, RuleChoice } from './rule.entity';
-import { RoomType } from 'src/common/enums/roomType.enum';
+import { RoomType } from 'src/common/enums/room-type.enum';
 
 @Entity()
 export class Room extends CoreEntity {

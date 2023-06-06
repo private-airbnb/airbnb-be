@@ -14,7 +14,6 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './entities/user.entity';
 import { Public } from '../common/decorators/public.decorator';
 import { Roles } from '../common/decorators/roles.decorator';
 import { UserRole } from './entities/role.entity';
@@ -23,14 +22,14 @@ import { SignInUserDTO } from './dto/sign-in-user.dto';
 import { ForgotPasswordDTO } from './dto/forgot-password.dto';
 import { CreateNewPasswordDTO } from './dto/create-new-password.dto';
 import { InfoUserDto, InfoUserWithCredentialDto } from './dto/info-user.dto';
-import { UserPipe } from 'src/common/decorators/user-pipe.decorator';
+import { User } from 'src/common/decorators/user.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async getInfoUser(@UserPipe() user): Promise<InfoUserDto> {
+  async getInfoUser(@User() user): Promise<InfoUserDto> {
     return this.usersService.getInfoUser(user.userId);
   }
 
@@ -64,11 +63,11 @@ export class UsersController {
     return this.usersService.createNewPassword(model);
   }
 
-  @Roles(UserRole.Admin)
-  @Get()
-  async findAll(): Promise<User[]> {
-    return await this.usersService.findAll();
-  }
+  // @Roles(UserRole.Admin)
+  // @Get()
+  // async findAll(): Promise<User[]> {
+  //   return await this.usersService.findAll();
+  // }
 
   // @Get('profile')
   // getProfile(@Request() { user }: { user: User }) {

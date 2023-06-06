@@ -1,5 +1,5 @@
 export const METADATA = {
-  IS_PUBLIC: 'IS_PUBLIC',
+  IS_PUBLIC_KEY: 'IS_PUBLIC_KEY',
   ACTION: 'ACTION',
   MODULE: 'MODULE',
   ROLE: 'ROLE',

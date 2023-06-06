@@ -1,4 +1,4 @@
-import { AuthProvider } from 'src/common/enums/oauthProvider.enum';
+import { AuthProvider } from 'src/common/enums/oauth-provider.enum';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { User } from './user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
